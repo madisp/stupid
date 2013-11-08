@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+	<Match>
+		<Or>
+			<!-- Ignore Antlr4 generated code -->
+			<Class name="com.madisp.stupid.gen.StupidBaseVisitor" />
+			<Class name="com.madisp.stupid.gen.StupidLexer" />
+			<Class name="com.madisp.stupid.gen.StupidParser" />
+			<Class name="com.madisp.stupid.gen.StupidVisitor" />
+			<Class name="com.madisp.stupid.gen.CharSupport" />
+		</Or>
+	</Match>
+</FindBugsFilter>

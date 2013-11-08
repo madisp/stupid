@@ -1,0 +1,91 @@
+repositories {
+    mavenCentral()
+}
+
+// gradle stuff
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.8'
+}
+
+// java / dependencies
+
+apply plugin: 'java'
+project.sourceCompatibility = '1.6'
+
+configurations {
+    antlr4
+}
+
+dependencies {
+    antlr4 'org.antlr:antlr4:4.1'
+    compile 'org.antlr:antlr4-runtime:4.1'
+    testCompile 'junit:junit:4.+'
+}
+
+// code coverage
+
+apply plugin: 'jacoco'
+jacocoTestReport {
+    group = 'reporting'
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/reports/coverage"
+    }
+}
+
+// static analysis
+
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+
+findbugs {
+    excludeFilter file('config/findbugs/exclude.xml')
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+// antlr4 custom tasks
+// TODO write a plugin for this
+
+task generateGrammarSources(type: JavaExec) {
+    ext.grammarFiles = fileTree('src/main/antlr4').include('*.g4')
+    ext.outputPath = 'gen'
+    ext.package = 'com.madisp.stupid.gen'
+    inputs.files grammarFiles
+    outputs.dir outputPath
+    classpath configurations.antlr4
+    main = 'org.antlr.v4.Tool'
+    args('-o')
+    args(ext.outputPath + '/' + ext.package.replace('.', '/'))
+    args('-package')
+    args(ext.package)
+    args('-visitor')
+    args('-no-listener')
+    args(grammarFiles.files.join(' '))
+}
+
+task grun(type: JavaExec, dependsOn: compileJava) {
+    classpath configurations.antlr4
+    classpath sourceSets.main.output
+    main = 'org.antlr.v4.runtime.misc.TestRig'
+    args("com.madisp.stupid.gen.Stupid")
+    args("prog")
+    args("-gui")
+    setStandardInput(System.in)
+    doFirst {
+        project.logger.info("Running grun with grammar com.madisp.bad.parse.Expr and rule prog with args -gui")
+        println("Input expression (CTRL+D / EOF to finish):")
+    }
+}
+
+compileJava.dependsOn generateGrammarSources
+clean.dependsOn cleanGenerateGrammarSources
+
+sourceSets.main.java.srcDirs 'gen'
