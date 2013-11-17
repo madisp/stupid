@@ -1,12 +1,13 @@
 package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.Expression;
 import com.madisp.stupid.Value;
 
-public class MinusExpression implements Value {
-	private final Value left, right;
+public class MinusExpression implements Expression {
+	private final Expression left, right;
 
-	public MinusExpression(Value left, Value right) {
+	public MinusExpression(Expression left, Expression right) {
 		this.left = left;
 		this.right = right;
 	}
@@ -19,5 +20,10 @@ public class MinusExpression implements Value {
 			return ctx.toDouble(l) - ctx.toDouble(r);
 		}
 		return ctx.toInt(l) - ctx.toInt(r);
+	}
+
+	@Override
+	public Expression[] children() {
+		return new Expression[] { left, right };
 	}
 }

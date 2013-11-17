@@ -1,12 +1,13 @@
 package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.Expression;
 import com.madisp.stupid.Value;
 
-public class AndExpression implements Value {
-	private final Value left, right;
+public class AndExpression implements Expression {
+	private final Expression left, right;
 
-	public AndExpression(Value left, Value right) {
+	public AndExpression(Expression left, Expression right) {
 		this.left = left;
 		this.right = right;
 	}
@@ -14,5 +15,10 @@ public class AndExpression implements Value {
 	@Override
 	public Object value(ExecContext ctx) {
 		return ctx.toBool(left) && ctx.toBool(right);
+	}
+
+	@Override
+	public Expression[] children() {
+		return new Expression[] { left, right };
 	}
 }

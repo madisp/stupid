@@ -1,13 +1,14 @@
 package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.Expression;
 import com.madisp.stupid.Value;
 
-public class VarExpression implements Value {
-	private final Value base;
+public class VarExpression implements Expression {
+	private final Expression base;
 	private final String identifier;
 
-	public VarExpression(Value base, String identifier) {
+	public VarExpression(Expression base, String identifier) {
 		this.base = base;
 		this.identifier = identifier;
 	}
@@ -20,5 +21,10 @@ public class VarExpression implements Value {
 			return null; // null.something always yields null
 		}
 		return ctx.getFieldValue(root, identifier);
+	}
+
+	@Override
+	public Expression[] children() {
+		return new Expression[] { base };
 	}
 }

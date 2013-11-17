@@ -1,21 +1,6 @@
 package com.madisp.stupid;
 
-import com.madisp.stupid.expr.AndExpression;
-import com.madisp.stupid.expr.ApplyExpression;
-import com.madisp.stupid.expr.AssignExpression;
-import com.madisp.stupid.expr.BlockExpression;
-import com.madisp.stupid.expr.CallExpression;
-import com.madisp.stupid.expr.ConstantExpression;
-import com.madisp.stupid.expr.DivisionExpression;
-import com.madisp.stupid.expr.MinusExpression;
-import com.madisp.stupid.expr.MultiplicationExpression;
-import com.madisp.stupid.expr.NegateExpression;
-import com.madisp.stupid.expr.NotExpression;
-import com.madisp.stupid.expr.OrExpression;
-import com.madisp.stupid.expr.PlusExpression;
-import com.madisp.stupid.expr.StatementListExpression;
-import com.madisp.stupid.expr.TernaryExpression;
-import com.madisp.stupid.expr.VarExpression;
+import com.madisp.stupid.expr.*;
 import com.madisp.stupid.gen.StupidBaseVisitor;
 import com.madisp.stupid.gen.StupidLexer;
 import com.madisp.stupid.gen.StupidParser;
@@ -26,8 +11,8 @@ import org.antlr.v4.runtime.misc.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpressionFactory extends StupidBaseVisitor<Value> {
-	public Value parseExpression(String expression) {
+public class ExpressionFactory extends StupidBaseVisitor<Expression> {
+	public Expression parseExpression(String expression) {
 		StupidLexer lexer = new StupidLexer(new ANTLRInputStream(expression));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		StupidParser parser = new StupidParser(tokens);
@@ -35,8 +20,8 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 	}
 
 	@Override
-	public Value visitProg(@NotNull StupidParser.ProgContext ctx) {
-		List<Value> statements = new ArrayList<Value>();
+	public Expression visitProg(@NotNull StupidParser.ProgContext ctx) {
+		List<Expression> statements = new ArrayList<Expression>();
 		StupidParser.StatementsContext xs = ctx.statements();
 		while (xs != null) {
 			statements.add(visitExpr(xs.expr()));
@@ -46,7 +31,7 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 	}
 
 	@Override
-	public Value visitExpr(@NotNull StupidParser.ExprContext ctx) {
+	public Expression visitExpr(@NotNull StupidParser.ExprContext ctx) {
 		if (ctx.value() != null) {
 			return visitValue(ctx.value());
 		} if (ctx.AND() != null) {
@@ -65,12 +50,12 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 			if (ctx.DOT() != null) {
 				// apply, not value
 				StupidParser.ArgslistContext args = ctx.argslist();
-				List<Value> argsList = new ArrayList<Value>();
+				List<Expression> argsList = new ArrayList<Expression>();
 				while (args != null) {
 					argsList.add(visitExpr(args.expr()));
 					args = args.argslist();
 				}
-				return new ApplyExpression(visitExpr(ctx.left), argsList.toArray(new Value[argsList.size()]));
+				return new ApplyExpression(visitExpr(ctx.left), argsList.toArray(new Expression[argsList.size()]));
 			}
 			return visitExpr(ctx.center);
 		} else if (ctx.BANG() != null) {
@@ -78,28 +63,28 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 		} else if (ctx.MINUS() != null) {
 			return new NegateExpression(visitExpr(ctx.center));
 		} else if (ctx.var() != null) {
-			Value base = null;
+			Expression base = null;
 			if (ctx.DOT() != null) {
 				base = visitExpr(ctx.left);
 			}
 			return new VarExpression(base, ctx.var().IDENTIFIER().getText());
 		} else if (ctx.call() != null) {
 			StupidParser.ArgslistContext args = ctx.call().argslist();
-			List<Value> argsList = new ArrayList<Value>();
+			List<Expression> argsList = new ArrayList<Expression>();
 			while (args != null) {
 				argsList.add(visitExpr(args.expr()));
 				args = args.argslist();
 			}
-			Value base = null;
+			Expression base = null;
 			if (ctx.DOT() != null) {
 				base = visitExpr(ctx.left);
 			}
 			return new CallExpression(base, ctx.call().IDENTIFIER().getText(),
-					argsList.toArray(new Value[argsList.size()]));
+					argsList.toArray(new Expression[argsList.size()]));
 		} else if (ctx.ASK() != null) {
 			return new TernaryExpression(visitExpr(ctx.left), visitExpr(ctx.center), visitExpr(ctx.right));
 		} else if (ctx.assign() != null) {
-			Value base = null;
+			Expression base = null;
 			if (ctx.DOT() != null) {
 				base = visitExpr(ctx.left);
 			}
@@ -109,7 +94,7 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 	}
 
 	@Override
-	public Value visitValue(@NotNull StupidParser.ValueContext ctx) {
+	public Expression visitValue(@NotNull StupidParser.ValueContext ctx) {
 		if (ctx.bool() != null) {
 			return visitBool(ctx.bool());
 		} else if (ctx.str() != null) {
@@ -120,12 +105,14 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 			return visitNil(ctx.nil());
 		} else if (ctx.block() != null) {
 			return visitBlock(ctx.block());
+		} else if (ctx.resource() != null) {
+			return visitResource(ctx.resource());
 		}
 		return super.visitValue(ctx);
 	}
 
 	@Override
-	public Value visitBool(@NotNull StupidParser.BoolContext ctx) {
+	public Expression visitBool(@NotNull StupidParser.BoolContext ctx) {
 		if (ctx.TRUE() != null) {
 			return new ConstantExpression(true);
 		} else if (ctx.FALSE() != null) {
@@ -135,12 +122,12 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 	}
 
 	@Override
-	public Value visitStr(@NotNull StupidParser.StrContext ctx) {
+	public Expression visitStr(@NotNull StupidParser.StrContext ctx) {
 		return new ConstantExpression(CharSupport.getStringFromGrammarStringLiteral(ctx.getText()));
 	}
 
 	@Override
-	public Value visitNum(@NotNull StupidParser.NumContext ctx) {
+	public Expression visitNum(@NotNull StupidParser.NumContext ctx) {
 		if (ctx.INT() != null) {
 			return new ConstantExpression(Integer.parseInt(ctx.getText()));
 		} else if (ctx.DOUBLE() != null) {
@@ -150,12 +137,12 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 	}
 
 	@Override
-	public Value visitNil(@NotNull StupidParser.NilContext ctx) {
+	public Expression visitNil(@NotNull StupidParser.NilContext ctx) {
 		return new ConstantExpression(null);
 	}
 
 	@Override
-	public Value visitBlock(@NotNull StupidParser.BlockContext ctx) {
+	public Expression visitBlock(@NotNull StupidParser.BlockContext ctx) {
 		StupidParser.VarlistContext vars = ctx.varlist();
 		List<String> varsList = new ArrayList<String>();
 		while (vars != null) {
@@ -163,7 +150,7 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 			vars = vars.varlist();
 		}
 
-		List<Value> statements = new ArrayList<Value>();
+		List<Expression> statements = new ArrayList<Expression>();
 		StupidParser.StatementsContext xs = ctx.statements();
 		while (xs != null) {
 			statements.add(visitExpr(xs.expr()));
@@ -171,5 +158,19 @@ public class ExpressionFactory extends StupidBaseVisitor<Value> {
 		}
 
 		return new BlockExpression(varsList.toArray(new String[varsList.size()]), new StatementListExpression(statements));
+	}
+
+	@Override
+	public Expression visitResource(@NotNull StupidParser.ResourceContext ctx) {
+		if (ctx.NULL() != null) {
+			return new ConstantExpression(0);
+		}
+		String pckg = null;
+		if (ctx.pckg() != null) {
+			pckg = ctx.pckg().getText();
+		}
+		String type = ctx.type.getText();
+		String name = ctx.name.getText();
+		return new ResourceExpression(pckg, type, name);
 	}
 }

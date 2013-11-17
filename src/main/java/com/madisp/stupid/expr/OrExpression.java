@@ -1,12 +1,13 @@
 package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.Expression;
 import com.madisp.stupid.Value;
 
-public class OrExpression implements Value {
-	private final Value left, right;
+public class OrExpression implements Expression {
+	private final Expression left, right;
 
-	public OrExpression(Value left, Value right) {
+	public OrExpression(Expression left, Expression right) {
 		this.left = left;
 		this.right = right;
 	}
@@ -20,5 +21,10 @@ public class OrExpression implements Value {
 		} else {
 			return rightVal;
 		}
+	}
+
+	@Override
+	public Expression[] children() {
+		return new Expression[] { left, right };
 	}
 }

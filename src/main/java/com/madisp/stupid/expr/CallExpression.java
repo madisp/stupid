@@ -1,14 +1,15 @@
 package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.Expression;
 import com.madisp.stupid.Value;
 
-public class CallExpression implements Value {
-	private final Value base;
+public class CallExpression implements Expression {
+	private final Expression base;
 	private final String identifier;
-	private final Value[] args;
+	private final Expression[] args;
 
-	public CallExpression(Value base, String identifier, Value... args) {
+	public CallExpression(Expression base, String identifier, Expression... args) {
 		this.base = base;
 		this.identifier = identifier;
 		this.args = args;
@@ -26,5 +27,13 @@ public class CallExpression implements Value {
 			return null; // null.something(...) always yields null
 		}
 		return ctx.callMethod(root, identifier, argValues);
+	}
+
+	@Override
+	public Expression[] children() {
+		Expression[] ret = new Expression[args.length + 1];
+		ret[0] = base;
+		System.arraycopy(args, 0, ret, 1, args.length);
+		return ret;
 	}
 }

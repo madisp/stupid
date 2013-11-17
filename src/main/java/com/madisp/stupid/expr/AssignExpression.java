@@ -1,14 +1,15 @@
 package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.Expression;
 import com.madisp.stupid.Value;
 
-public class AssignExpression implements Value {
-	private final Value base;
+public class AssignExpression implements Expression {
+	private final Expression base;
 	private final String identifier;
-	private final Value value;
+	private final Expression value;
 
-	public AssignExpression(Value base, String identifier, Value value) {
+	public AssignExpression(Expression base, String identifier, Expression value) {
 		this.base = base;
 		this.identifier = identifier;
 		this.value = value;
@@ -21,5 +22,10 @@ public class AssignExpression implements Value {
 			return null; // null.something always yields null
 		}
 		return ctx.setFieldValue(root, identifier, ctx.deref(value));
+	}
+
+	@Override
+	public Expression[] children() {
+		return new Expression[] { base, value };
 	}
 }

@@ -4,16 +4,18 @@ import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 import com.madisp.stupid.Value;
 
-public class ConstantExpression implements Expression {
-	private final Object constant;
+public class ResourceExpression implements Expression {
+	private final String pckg, type, name;
 
-	public ConstantExpression(Object constant) {
-		this.constant = constant;
+	public ResourceExpression(String pckg, String type, String name) {
+		this.pckg = pckg;
+		this.type = type;
+		this.name = name;
 	}
 
 	@Override
 	public Object value(ExecContext ctx) {
-		return constant;
+		return ctx.getResource(pckg, type, name);
 	}
 
 	@Override

@@ -35,22 +35,22 @@ public class BlocksTest extends BaseExpressionTest {
 		run = false;
 	}
 
-	@Test
-	public void testBlockToSingleMethodInterface() throws Exception {
-		assertEquals(false, run);
-		run(runnable);
-		assertEquals(true, run);
-		run = false;
-
-		assertEquals(false, run);
-		eval("run(runnable)");
-		assertEquals(true, run);
-		run = false;
-
-		// TODO commented out for now, I don't know if we want to have blocks to SAM's yet.
+	// TODO commented out for now, I don't know if we want to have blocks to SAM's yet.
+//	@Test
+//	public void testBlockToSingleMethodInterface() throws Exception {
+//		assertEquals(false, run);
+//		run(runnable);
+//		assertEquals(true, run);
+//		run = false;
+//
+//		assertEquals(false, run);
+//		eval("run(runnable)");
+//		assertEquals(true, run);
+//		run = false;
+//
 //		assertEquals(false, run);
 //		eval("run({run = true})");
 //		assertEquals(true, run);
 //		run = false;
-	}
+//	}
 }

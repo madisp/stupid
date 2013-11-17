@@ -15,4 +15,6 @@ public interface ExecContext {
 	Object callMethod(Object root, String identifier, Object... args);
 
 	Object apply(Object base, Object[] args);
+
+	Object getResource(String pckg, String type, String name);
 }

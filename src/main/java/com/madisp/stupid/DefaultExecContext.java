@@ -131,4 +131,9 @@ public class DefaultExecContext implements ExecContext {
 		}
 		return null;
 	}
+
+	@Override
+	public Object getResource(String pckg, String type, String name) {
+		return null; // return nothing
+	}
 }
