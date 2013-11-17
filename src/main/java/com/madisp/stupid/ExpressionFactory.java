@@ -1,6 +1,22 @@
 package com.madisp.stupid;
 
-import com.madisp.stupid.expr.*;
+import com.madisp.stupid.expr.AndExpression;
+import com.madisp.stupid.expr.ApplyExpression;
+import com.madisp.stupid.expr.AssignExpression;
+import com.madisp.stupid.expr.BlockExpression;
+import com.madisp.stupid.expr.CallExpression;
+import com.madisp.stupid.expr.ConstantExpression;
+import com.madisp.stupid.expr.DivisionExpression;
+import com.madisp.stupid.expr.MinusExpression;
+import com.madisp.stupid.expr.MultiplicationExpression;
+import com.madisp.stupid.expr.NegateExpression;
+import com.madisp.stupid.expr.NotExpression;
+import com.madisp.stupid.expr.OrExpression;
+import com.madisp.stupid.expr.PlusExpression;
+import com.madisp.stupid.expr.ResourceExpression;
+import com.madisp.stupid.expr.StatementListExpression;
+import com.madisp.stupid.expr.TernaryExpression;
+import com.madisp.stupid.expr.VarExpression;
 import com.madisp.stupid.gen.StupidBaseVisitor;
 import com.madisp.stupid.gen.StupidLexer;
 import com.madisp.stupid.gen.StupidParser;

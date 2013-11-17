@@ -29,6 +29,11 @@ public class BlocksTest extends BaseExpressionTest {
 	@Test
 	public void testSingleMethodApply() throws Exception {
 		assertEquals(false, run);
+		run(runnable);
+		assertEquals(true, run);
+		run = false;
+
+		assertEquals(false, run);
 		eval("runnable.()");
 		assertEquals(true, run);
 		// restore run
@@ -38,11 +43,6 @@ public class BlocksTest extends BaseExpressionTest {
 	// TODO commented out for now, I don't know if we want to have blocks to SAM's yet.
 //	@Test
 //	public void testBlockToSingleMethodInterface() throws Exception {
-//		assertEquals(false, run);
-//		run(runnable);
-//		assertEquals(true, run);
-//		run = false;
-//
 //		assertEquals(false, run);
 //		eval("run(runnable)");
 //		assertEquals(true, run);
