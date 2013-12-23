@@ -5,13 +5,25 @@ repositories {
 // gradle stuff
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.8'
+    gradleVersion = '1.9'
 }
 
-// java / dependencies
+// plugins
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+
+// general project info
+
+group = 'com.madisp.stupid'
+version = '1.0.0'
 project.sourceCompatibility = '1.6'
+tasks.withType(Compile) { options.encoding = 'UTF-8' }
+
+// java / dependencies
 
 configurations {
     antlr4
@@ -25,7 +37,6 @@ dependencies {
 
 // code coverage
 
-apply plugin: 'jacoco'
 jacocoTestReport {
     group = 'reporting'
     reports {
@@ -36,9 +47,6 @@ jacocoTestReport {
 }
 
 // static analysis
-
-apply plugin: 'findbugs'
-apply plugin: 'checkstyle'
 
 findbugs {
     excludeFilter file('config/findbugs/exclude.xml')
@@ -75,13 +83,13 @@ task grun(type: JavaExec, dependsOn: compileJava) {
     classpath configurations.antlr4
     classpath sourceSets.main.output
     main = 'org.antlr.v4.runtime.misc.TestRig'
-    args("com.madisp.stupid.gen.Stupid")
-    args("prog")
-    args("-gui")
+    args('com.madisp.stupid.gen.Stupid')
+    args('prog')
+    args('-gui')
     setStandardInput(System.in)
     doFirst {
-        project.logger.info("Running grun with grammar com.madisp.bad.parse.Expr and rule prog with args -gui")
-        println("Input expression (CTRL+D / EOF to finish):")
+        project.logger.info('Running grun with grammar com.madisp.bad.parse.Expr and rule prog with args -gui')
+        println('Input expression (CTRL+D / EOF to finish):')
     }
 }
 
@@ -89,3 +97,71 @@ compileJava.dependsOn generateGrammarSources
 clean.dependsOn cleanGenerateGrammarSources
 
 sourceSets.main.java.srcDirs 'gen'
+
+// jar with sources
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+// jar with javadocs
+
+task javadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+}
+task javadocJar(type: Jar, dependsOn: javadocs) {
+    from javadoc.destinationDir
+}
+
+// publishing, prepping for central
+
+publishing {
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier 'sources'
+            }
+            artifact javadocJar {
+                classifier 'javadoc'
+            }
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name 'stupid'
+                    description 'A stupid scripting language for Java/JVM'
+                    url 'http://github.com/madisp/stupid'
+                    scm {
+                        url 'http://github.com/madisp/stupid'
+                        connection 'scm:git:git://github.com/madisp/stupid.git'
+                        developerConnection 'scm:git:ssh://git@github.com/madisp/stupid.git'
+                    }
+                    issueManagement {
+                        system 'GitHub'
+                        url 'http://github.com/madisp/stupid/issues'
+                    }
+                    developers {
+                        developer {
+                            id 'madisp'
+                            name 'Madis Pink'
+                            email 'madis.pink@gmail.com'
+                        }
+                    }
+                    licenses {
+                        license {
+                            name 'The MIT License'
+                            url 'http://opensource.org/licenses/MIT'
+                            distribution 'repo'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

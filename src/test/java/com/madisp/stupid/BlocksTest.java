@@ -2,7 +2,7 @@ package com.madisp.stupid;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 public class BlocksTest extends BaseExpressionTest {
