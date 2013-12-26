@@ -2,7 +2,6 @@ package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
-import com.madisp.stupid.Value;
 
 public class TernaryExpression implements Expression {
 	private final Expression expression, trueValue, falseValue;
@@ -15,7 +14,8 @@ public class TernaryExpression implements Expression {
 
 	@Override
 	public Object value(ExecContext ctx) {
-		return ctx.toBool(expression) ? trueValue.value(ctx) : falseValue.value(ctx);
+		return ctx.getConverter().toBool(ctx.dereference(expression))
+				? ctx.dereference(trueValue) : ctx.dereference(falseValue);
 	}
 
 	@Override

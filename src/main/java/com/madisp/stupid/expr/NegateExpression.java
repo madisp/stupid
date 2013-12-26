@@ -2,7 +2,6 @@ package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
-import com.madisp.stupid.Value;
 
 public class NegateExpression implements Expression {
 	private final Expression expr;
@@ -13,7 +12,7 @@ public class NegateExpression implements Expression {
 
 	@Override
 	public Object value(ExecContext ctx) {
-		Object value = ctx.deref(expr);
+		Object value = ctx.dereference(expr);
 		if (value instanceof Integer) {
 			return 0-((Integer)value);
 		} else if (value instanceof Double) {

@@ -2,7 +2,6 @@ package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
-import com.madisp.stupid.Value;
 
 public class ResourceExpression implements Expression {
 	private final String pckg, type, name;
@@ -15,7 +14,11 @@ public class ResourceExpression implements Expression {
 
 	@Override
 	public Object value(ExecContext ctx) {
-		return ctx.getResource(pckg, type, name);
+		try {
+			return ctx.getResource(pckg, type, name);
+		} catch (NoSuchFieldException _) {
+			return null;
+		}
 	}
 
 	@Override

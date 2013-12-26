@@ -2,7 +2,6 @@ package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
-import com.madisp.stupid.Value;
 
 public class OrExpression implements Expression {
 	private final Expression left, right;
@@ -14,9 +13,9 @@ public class OrExpression implements Expression {
 
 	@Override
 	public Object value(ExecContext ctx) {
-		Object leftVal = ctx.deref(left);
-		Object rightVal = ctx.deref(right);
-		if (ctx.toBool(leftVal)) {
+		Object leftVal = ctx.dereference(left);
+		Object rightVal = ctx.dereference(right);
+		if (ctx.getConverter().toBool(leftVal)) {
 			return leftVal;
 		} else {
 			return rightVal;

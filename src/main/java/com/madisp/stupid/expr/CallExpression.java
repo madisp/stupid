@@ -2,7 +2,6 @@ package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
-import com.madisp.stupid.Value;
 
 public class CallExpression implements Expression {
 	private final Expression base;
@@ -20,13 +19,17 @@ public class CallExpression implements Expression {
 	public Object value(ExecContext ctx) {
 		Object[] argValues = new Object[args.length];
 		for (int i = 0; i < argValues.length; i++) {
-			argValues[i] = ctx.deref(args[i]);
+			argValues[i] = ctx.dereference(args[i]);
 		}
 		Object root = base == null ? null : base.value(ctx);
 		if (base != null && root == null) {
 			return null; // null.something(...) always yields null
 		}
-		return ctx.callMethod(root, identifier, argValues);
+		try {
+			return ctx.callMethod(root, identifier, argValues);
+		} catch (NoSuchMethodException nsme) {
+			return null;
+		}
 	}
 
 	@Override

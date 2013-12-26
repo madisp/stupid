@@ -3,7 +3,7 @@ package com.madisp.stupid;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VarScope implements Scope {
+public class VarScope extends BaseExecContext {
 
 	public static enum Type { NO_CREATE, CREATE_ON_SET, CREATE_ON_SET_OR_GET }
 	private final Type type;
@@ -64,16 +64,6 @@ public class VarScope implements Scope {
 			}
 		}
 		return obj.put(identifier, new Var(value));
-	}
-
-	@Override
-	public Object callMethod(Object root, String identifier, Object... args) throws NoSuchMethodException {
-		throw new NoSuchMethodException();
-	}
-
-	@Override
-	public Object apply(Object base, Object[] args) throws NoSuchMethodException {
-		throw new NoSuchMethodException();
 	}
 
 	private static class Var implements Value {

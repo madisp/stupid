@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ReflectionScope implements Scope {
+public class ReflectionScope extends BaseExecContext {
 	final Object base;
 
 	public ReflectionScope(Object base) {

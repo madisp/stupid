@@ -24,9 +24,8 @@ public class Block {
 		for (int i = 0; i < varNames.length; i++) {
 			argMap.put(varNames[i], args[i]);
 		}
-		ctx.pushScope(new VarScope(Collections.unmodifiableMap(argMap)));
-		Object ret = ctx.deref(body);
-		ctx.popScope();
-		return ret;
+		// wrap our block arguments over the underlying context
+		ExecContext scoped = new WrappingExecContext(new VarScope(Collections.unmodifiableMap(argMap)), ctx);
+		return body.value(scoped);
 	};
 }

@@ -1,9 +1,10 @@
 package com.madisp.stupid.main;
 
-import com.madisp.stupid.DefaultExecContext;
-import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.Converter;
+import com.madisp.stupid.DefaultConverter;
 import com.madisp.stupid.ExpressionFactory;
 import com.madisp.stupid.ReflectionScope;
+import com.madisp.stupid.StackedExecContext;
 import com.madisp.stupid.Value;
 import com.madisp.stupid.VarScope;
 
@@ -14,18 +15,18 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 public class Repl {
-	private final ExecContext ctx;
+	private final StackedExecContext ctx;
 	private final ExpressionFactory factory;
 	private final BufferedReader reader;
 	private boolean quit = false;
 
 	public Repl(String encoding) throws UnsupportedEncodingException {
-		ctx = new DefaultExecContext();
+		ctx = new StackedExecContext();
 		factory = new ExpressionFactory();
 		// access to quit method
-		ctx.pushScope(new ReflectionScope(this));
+		ctx.pushExecContext(new ReflectionScope(this));
 		// create a var scope
-		ctx.pushScope(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
+		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
 		reader = new BufferedReader(new InputStreamReader(System.in, encoding));
 	}
 
@@ -34,7 +35,7 @@ public class Repl {
 			while (!quit) {
 				String line = reader.readLine();
 				Value v = factory.parseExpression(line);
-				System.out.println(ctx.deref(v));
+				System.out.println(ctx.dereference(v));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

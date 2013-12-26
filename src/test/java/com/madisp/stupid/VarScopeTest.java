@@ -16,20 +16,19 @@ public class VarScopeTest extends BaseExpressionTest {
 		vars.put("foo", "foo");
 		vars.put("bar", "bar");
 
-		ctx.pushScope(new VarScope(vars));
+		ctx.pushExecContext(new VarScope(vars));
 		assertNotNull(eval("foo"));
 		assertEquals("foo", eval("foo"));
 		assertNotNull(eval("bar"));
 		assertEquals("bar", eval("bar"));
 		assertNull(eval("foobar"));
 		assertEquals("foobar", eval("foo + bar"));
-
-		ctx.popScope();
+		ctx.popExecContext();
 	}
 
 	@Test
 	public void testCreateOnSet() throws Exception {
-		ctx.pushScope(new VarScope(VarScope.Type.CREATE_ON_SET));
+		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET));
 
 		assertNull(eval("foo"));
 		assertEquals("foo", eval("foo = 'foo'"));
@@ -37,12 +36,12 @@ public class VarScopeTest extends BaseExpressionTest {
 		assertEquals("bar", eval("bar = 'bar'"));
 		assertEquals("foobar", eval("foo + bar"));
 
-		ctx.popScope();
+		ctx.popExecContext();
 	}
 
 	@Test
 	public void testNestedCreates() throws Exception {
-		ctx.pushScope(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
+		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
 
 		assertNull(eval("foo"));
 		assertNull(eval("foo.bar"));
@@ -52,12 +51,12 @@ public class VarScopeTest extends BaseExpressionTest {
 		assertNull(eval("bar"));
 		assertEquals("bar", eval("foo.bar"));
 
-		ctx.popScope();
+		ctx.popExecContext();
 	}
 
 	@Test
 	public void testDeeplyNestedCreates() throws Exception {
-		ctx.pushScope(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
+		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
 
 		assertNull(eval("foo"));
 		assertNull(eval("foo.bar"));
@@ -68,12 +67,12 @@ public class VarScopeTest extends BaseExpressionTest {
 		assertNotNull(eval("foo.bar.baz"));
 		assertEquals("foobarbaz", eval("foo.bar.baz"));
 
-		ctx.popScope();
+		ctx.popExecContext();
 	}
 
 	@Test
 	public void testCreatesOnNonNulls() throws Exception {
-		ctx.pushScope(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
+		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
 		assertNull(eval("foo"));
 		assertEquals("foo", eval("foo = 'foo'"));
 		assertEquals("foo", eval("foo"));
@@ -81,6 +80,6 @@ public class VarScopeTest extends BaseExpressionTest {
 		assertEquals("bar", eval("foo.bar = 'bar'"));
 		assertEquals("bar", eval("foo.bar"));
 		assertEquals("foobar", eval("foo + foo.bar"));
-		ctx.popScope();
+		ctx.popExecContext();
 	}
 }

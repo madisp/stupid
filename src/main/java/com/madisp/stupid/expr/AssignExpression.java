@@ -2,7 +2,6 @@ package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
-import com.madisp.stupid.Value;
 
 public class AssignExpression implements Expression {
 	private final Expression base;
@@ -21,7 +20,11 @@ public class AssignExpression implements Expression {
 		if (base != null && root == null) {
 			return null; // null.something always yields null
 		}
-		return ctx.setFieldValue(root, identifier, ctx.deref(value));
+		try {
+			return ctx.setFieldValue(root, identifier, ctx.dereference(value));
+		} catch (NoSuchFieldException nsfe) {
+			return null;
+		}
 	}
 
 	@Override

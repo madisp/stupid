@@ -2,7 +2,6 @@ package com.madisp.stupid.expr;
 
 import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
-import com.madisp.stupid.Value;
 
 public class ApplyExpression implements Expression {
 	private final Expression value;
@@ -15,12 +14,17 @@ public class ApplyExpression implements Expression {
 
 	@Override
 	public Object value(ExecContext ctx) {
-		Object base = ctx.deref(value);
+		Object base = ctx.dereference(value);
 		Object[] argValues = new Object[args.length];
 		for (int i = 0; i < argValues.length; i++) {
-			argValues[i] = ctx.deref(args[i]);
+			argValues[i] = ctx.dereference(args[i]);
 		}
-		return ctx.apply(base, argValues);
+		try {
+			return ctx.apply(base, argValues);
+		} catch (NoSuchMethodException nsme) {
+			// TODO log it. Think of error handling in general.
+			return null;
+		}
 	}
 
 	@Override

@@ -4,21 +4,21 @@ import org.junit.After;
 import org.junit.Before;
 
 public abstract class BaseExpressionTest {
-	protected DefaultExecContext ctx = new DefaultExecContext();
+	protected StackedExecContext ctx = new StackedExecContext();
 	private ExpressionFactory builder = new ExpressionFactory();
 
 	protected Object eval(String expr) {
 		Value e = builder.parseExpression(expr);
-		return ctx.deref(e);
+		return ctx.dereference(e);
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		ctx.pushScope(new ReflectionScope(this));
+		ctx.pushExecContext(new ReflectionScope(this));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		ctx.popScope();
+		ctx.popExecContext();
 	}
 }
