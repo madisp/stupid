@@ -6,9 +6,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * An {@link com.madisp.stupid.ExecContext} that uses reflection to bind the
+ * value of an expression to a Java object. This allows you to interface with
+ * Java methods and objects from stupid.
+ *
+ * There is a special identifier, "this" that returns the bound object itself.
+ */
 public class ReflectionContext extends BaseContext {
 	final Object base;
 
+	/**
+	 * Create a ReflectionContext bound to the object base
+	 * @param base the bound object for the context
+	 */
 	public ReflectionContext(Object base) {
 		this.base = base;
 	}

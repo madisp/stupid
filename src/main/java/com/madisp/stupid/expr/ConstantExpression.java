@@ -1,8 +1,11 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * Constant value. Super boring, used for literals and null.
+ */
 public class ConstantExpression implements Expression {
 	private final Object constant;
 

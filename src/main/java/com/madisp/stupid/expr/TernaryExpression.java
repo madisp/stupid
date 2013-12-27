@@ -1,8 +1,14 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * The classic ternary expression, e.g. expr ? trueValue : falseValue.
+ * I know everybody hates it but it has been proven useful from time to time.
+ *
+ * In stupid: {@code expr ? trueValue : falseValue}
+ */
 public class TernaryExpression implements Expression {
 	private final Expression expression, trueValue, falseValue;
 

@@ -1,8 +1,12 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * Get a variable, either for getting a value or assigning to it.
+ * Usage in stupid: {@code var}, or {@code obj.var}.
+ */
 public class VarExpression implements Expression {
 	private final Expression base;
 	private final String identifier;

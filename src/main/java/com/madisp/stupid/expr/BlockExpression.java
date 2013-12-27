@@ -1,11 +1,15 @@
 package com.madisp.stupid.expr;
 
 import com.madisp.stupid.Block;
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
 import java.util.Arrays;
 
+/**
+ * An expression that returns a block when evaluated.
+ * Usage in stupid: {@code sqr = {|x| x * x	}}
+ */
 public class BlockExpression implements Expression {
 	private final StatementListExpression body;
 	private final String[] varNames;

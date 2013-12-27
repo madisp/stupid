@@ -1,8 +1,13 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * Call a method.
+ * Usage in stupid: {@code method(arg1, arg2, ..., argN)}, or
+ * {@code obj.method(arg1, arg2, ..., argN)}.
+ */
 public class CallExpression implements Expression {
 	private final Expression base;
 	private final String identifier;

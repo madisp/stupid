@@ -1,8 +1,15 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * The resource expression. This is currently unsupported but can be used on
+ * android. The value of this is typically an android resource id which is an
+ * int.
+ *
+ * Stupid usage: {@code @pckg:type/name}
+ */
 public class ResourceExpression implements Expression {
 	private final String pckg, type, name;
 

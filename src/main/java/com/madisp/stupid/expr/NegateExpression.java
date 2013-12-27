@@ -1,8 +1,13 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * The unary minus (negation) operator.
+ *
+ * Usage in stupid: {@code -expr}
+ */
 public class NegateExpression implements Expression {
 	private final Expression expr;
 

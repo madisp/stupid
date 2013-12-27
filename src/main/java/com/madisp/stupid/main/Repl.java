@@ -12,6 +12,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+/**
+ * A Read-Eval-Print-Loop main class that serves as a simple example of integrating
+ * stupid with some Java code.
+ */
 public class Repl {
 	private final StackContext ctx;
 	private final ExpressionFactory factory;

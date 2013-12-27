@@ -28,7 +28,22 @@ import org.antlr.v4.runtime.misc.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ExpressionFactory is used to parse a String into an Expression tree.
+ * Currently the underlying implementation uses ANTLR4, but this may change
+ * in the future.
+ *
+ * Note: Only the parseExpression(...) method is considered to be a part
+ * of the public API.
+ */
 public class ExpressionFactory extends StupidBaseVisitor<Expression> {
+
+	/**
+	 * Tokenize, lex and visit an expression represented by a String.
+	 * The root node of the resulting expression tree will be returned.
+	 * @param expression A stupid expression
+	 * @return The root node of the resulting expression tree
+	 */
 	public Expression parseExpression(String expression) {
 		StupidLexer lexer = new StupidLexer(new ANTLRInputStream(expression));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);

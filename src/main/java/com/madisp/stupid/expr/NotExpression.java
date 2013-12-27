@@ -1,8 +1,13 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * The unary boolean not operator.
+ *
+ * Usage in stupid: {@code !expr}
+ */
 public class NotExpression implements Expression {
 	private final Expression expr;
 

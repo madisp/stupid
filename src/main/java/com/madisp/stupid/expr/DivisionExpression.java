@@ -1,8 +1,14 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * Divide one value by another. If any of the arguments is a double then
+ * both of the arguments are converted to double and the return value is also
+ * a double. Otherwise an Integer is implied. May lead to division by zero.
+ * In stupid: {@code expr / expr}
+ */
 public class DivisionExpression implements Expression {
 	private final Expression left, right;
 

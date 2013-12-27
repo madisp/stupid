@@ -1,8 +1,12 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * The boolean or operator.
+ * Usage in stupid: {@code expr or expr}
+ */
 public class OrExpression implements Expression {
 	private final Expression left, right;
 

@@ -1,9 +1,19 @@
 package com.madisp.stupid.context;
 
+import com.madisp.stupid.Converter;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Value;
 
+/**
+ * Base class for all of the {@link ExecContext} implementations in stupid.
+ * All of the methods that can throw NoSuch* exceptions will throw them.
+ * The dereference() method runs instanceof {@link Value} checks in a loop and
+ * evaluates the Value until it obtains a POJO instance or null.
+ * The getConverter() method returns a {@link DefaultConverter} but this may
+ * be overridden by calling setConverter().
+ */
 public class BaseContext implements ExecContext {
-	private static final Converter DEFAULT_CONVERTER = new DefaultConverter();
+	private Converter converter = new DefaultConverter();
 
 	@Override
 	public Object getFieldValue(Object root, String identifier) throws NoSuchFieldException {
@@ -17,12 +27,12 @@ public class BaseContext implements ExecContext {
 
 	@Override
 	public Object callMethod(Object root, String identifier, Object... args) throws NoSuchMethodException {
-		return null;
+		throw new NoSuchMethodException();
 	}
 
 	@Override
 	public Object apply(Object base, Object[] args) throws NoSuchMethodException {
-		return null;
+		throw new NoSuchMethodException();
 	}
 
 	@Override
@@ -40,6 +50,10 @@ public class BaseContext implements ExecContext {
 
 	@Override
 	public Converter getConverter() {
-		return DEFAULT_CONVERTER;
+		return converter;
+	}
+
+	public void setConverter(Converter converter) {
+		this.converter = converter;
 	}
 }

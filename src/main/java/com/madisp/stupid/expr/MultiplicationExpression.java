@@ -1,8 +1,15 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * The arithmetic multiplication operator. If any of the arguments is a double then
+ * both of the arguments are converted to double and the return value is also
+ * a double. Otherwise an Integer is implied.
+ *
+ * Usage in stupid: {@code expr * expr}
+ */
 public class MultiplicationExpression implements Expression {
 	private final Expression left, right;
 

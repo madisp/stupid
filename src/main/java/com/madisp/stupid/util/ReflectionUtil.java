@@ -4,6 +4,9 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+/**
+ * A set of methods that are mainly consumed by the {@link com.madisp.stupid.context.ReflectionContext}.
+ */
 public class ReflectionUtil {
 	public static Method getMethodBySignature(Class clz, boolean isStatic, String method, Object... args) {
 		Class[] paramClasses = new Class[args.length];

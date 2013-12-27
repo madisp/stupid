@@ -1,8 +1,12 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * Assign a value to a field.
+ * Usage in stupid: {@code var = expr}
+ */
 public class AssignExpression implements Expression {
 	private final Expression base;
 	private final String identifier;

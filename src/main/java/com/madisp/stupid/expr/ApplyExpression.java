@@ -1,8 +1,12 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.ExecContext;
 import com.madisp.stupid.Expression;
 
+/**
+ * An apply expression, usually evals to yielding a block.
+ * Usage in stupid: {@code expr.(arg1, arg2, ..., argN)}
+ */
 public class ApplyExpression implements Expression {
 	private final Expression value;
 	private final Expression[] args;
