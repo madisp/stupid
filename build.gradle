@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url 'http://jcenter.bintray.com' }
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -15,11 +24,12 @@ apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
+apply plugin: 'bintray'
 
 // general project info
 
 group = 'com.madisp.stupid'
-version = '1.0.0'
+version = '0.0.1'
 project.sourceCompatibility = '1.6'
 tasks.withType(Compile) { options.encoding = 'UTF-8' }
 
@@ -164,4 +174,19 @@ publishing {
             }
         }
     }
+}
+
+// bintray publishing
+bintray {
+    user = 'madisp'
+    key = System.getenv("BINTRAY_API_KEY")
+    publications = ['mavenJava'] // When uploading Maven-based publication files
+    pkg {
+        repo = 'maven'
+        name = 'com.madisp.stupid'
+        desc = 'A stupid scripting language for Java/JVM'
+        licenses = ['MIT']
+        labels = ['stupid']
+    }
+//    dryRun = dry // whether to run this as dry-run, without deploying
 }
