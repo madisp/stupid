@@ -5,8 +5,10 @@ import com.madisp.stupid.expr.ApplyExpression;
 import com.madisp.stupid.expr.AssignExpression;
 import com.madisp.stupid.expr.BlockExpression;
 import com.madisp.stupid.expr.CallExpression;
+import com.madisp.stupid.expr.ComparisonExpression;
 import com.madisp.stupid.expr.ConstantExpression;
 import com.madisp.stupid.expr.DivisionExpression;
+import com.madisp.stupid.expr.EqualsExpression;
 import com.madisp.stupid.expr.MinusExpression;
 import com.madisp.stupid.expr.MultiplicationExpression;
 import com.madisp.stupid.expr.NegateExpression;
@@ -94,6 +96,12 @@ public class ExpressionFactory extends StupidBaseVisitor<Expression> {
 			return new NotExpression(visitExpr(ctx.center));
 		} else if (ctx.MINUS() != null) {
 			return new NegateExpression(visitExpr(ctx.center));
+		} else if (ctx.EQUALS() != null && ctx.EQUALS().size() == 2) {
+			return new EqualsExpression(visitExpr(ctx.left), visitExpr(ctx.right));
+		} else if (ctx.LANGLE() != null) {
+			return new ComparisonExpression(visitExpr(ctx.left), visitExpr(ctx.right));
+		} else if (ctx.RANGLE() != null) {
+			return new ComparisonExpression(visitExpr(ctx.right), visitExpr(ctx.left));
 		} else if (ctx.var() != null) {
 			Expression base = null;
 			if (ctx.DOT() != null) {

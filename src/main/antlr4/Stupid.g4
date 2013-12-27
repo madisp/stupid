@@ -12,13 +12,16 @@ expr: BANG center=expr
     | call
     | left=expr DOT call
     | left=expr DOT LPAREN argslist? RPAREN
-    | left=expr ASK center=expr COLON right=expr
     | left=expr STAR right=expr
     | left=expr SLASH right=expr
     | left=expr PLUS right=expr
     | left=expr MINUS right=expr
+    | left=expr LANGLE right=expr
+    | left=expr RANGLE right=expr
+    | left=expr EQUALS EQUALS right=expr
     | left=expr AND right=expr
     | left=expr OR right=expr
+    | left=expr ASK center=expr COLON right=expr
     | assign
     | left=expr DOT assign
     | value;
@@ -30,7 +33,7 @@ value: bool
      | resource
      | block;
 
-assign: IDENTIFIER ASSIGN expr;
+assign: IDENTIFIER EQUALS expr;
 
 var: IDENTIFIER;
 
@@ -67,12 +70,14 @@ DOUBLE: INT ('d'|'f')
       | INT '.' INT ('d'|'f')?;
 BANG: '!';
 AND: 'and';
-ASSIGN: '=';
+EQUALS: '=';
 OR: 'or';
 PLUS: '+';
 MINUS: '-';
 SLASH: '/';
 STAR: '*';
+LANGLE: '<';
+RANGLE: '>';
 DOLLAR: '$';
 ASK: '?';
 COLON: ':';
