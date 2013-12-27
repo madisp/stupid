@@ -1,23 +1,25 @@
-package com.madisp.stupid;
+package com.madisp.stupid.context;
+
+import com.madisp.stupid.Value;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class VarScope extends BaseExecContext {
+public class VarContext extends BaseContext {
 
 	public static enum Type { NO_CREATE, CREATE_ON_SET, CREATE_ON_SET_OR_GET }
 	private final Type type;
 	private final Var base;
 
-	public VarScope(Map<String, Object> vars) {
+	public VarContext(Map<String, Object> vars) {
 		this(Type.NO_CREATE, vars);
 	}
 
-	public VarScope(Type type) {
+	public VarContext(Type type) {
 		this(type, null);
 	}
 
-	public VarScope(Type type, Map<String, Object> vars) {
+	public VarContext(Type type, Map<String, Object> vars) {
 		this.type = type;
 		this.base = new Var(null);
 		if (vars != null) {

@@ -1,10 +1,12 @@
-package com.madisp.stupid;
+package com.madisp.stupid.context;
+
+import com.madisp.stupid.Block;
 
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class StackedExecContext extends BaseExecContext {
+public class StackContext extends BaseContext {
 	private final Deque<ExecContext> stack = new LinkedList<ExecContext>();
 
 	public void pushExecContext(ExecContext scope) {

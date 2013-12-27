@@ -1,10 +1,12 @@
 package com.madisp.stupid;
 
+import com.madisp.stupid.context.ReflectionContext;
+import com.madisp.stupid.context.StackContext;
 import org.junit.After;
 import org.junit.Before;
 
 public abstract class BaseExpressionTest {
-	protected StackedExecContext ctx = new StackedExecContext();
+	protected StackContext ctx = new StackContext();
 	private ExpressionFactory builder = new ExpressionFactory();
 
 	protected Object eval(String expr) {
@@ -14,7 +16,7 @@ public abstract class BaseExpressionTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ctx.pushExecContext(new ReflectionScope(this));
+		ctx.pushExecContext(new ReflectionContext(this));
 	}
 
 	@After

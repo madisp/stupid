@@ -1,6 +1,8 @@
-package com.madisp.stupid;
+package com.madisp.stupid.context;
 
-public class BaseExecContext implements ExecContext {
+import com.madisp.stupid.Value;
+
+public class BaseContext implements ExecContext {
 	private static final Converter DEFAULT_CONVERTER = new DefaultConverter();
 
 	@Override

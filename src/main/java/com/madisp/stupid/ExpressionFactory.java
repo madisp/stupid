@@ -20,6 +20,7 @@ import com.madisp.stupid.expr.VarExpression;
 import com.madisp.stupid.gen.StupidBaseVisitor;
 import com.madisp.stupid.gen.StupidLexer;
 import com.madisp.stupid.gen.StupidParser;
+import com.madisp.stupid.util.CharSupport;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.NotNull;

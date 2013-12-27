@@ -1,4 +1,4 @@
-package com.madisp.stupid;
+package com.madisp.stupid.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;

@@ -1,6 +1,6 @@
 package com.madisp.stupid.expr;
 
-import com.madisp.stupid.ExecContext;
+import com.madisp.stupid.context.ExecContext;
 import com.madisp.stupid.Expression;
 
 public class NotExpression implements Expression {

@@ -1,5 +1,6 @@
 package com.madisp.stupid;
 
+import com.madisp.stupid.context.VarContext;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public class VarScopeTest extends BaseExpressionTest {
 		vars.put("foo", "foo");
 		vars.put("bar", "bar");
 
-		ctx.pushExecContext(new VarScope(vars));
+		ctx.pushExecContext(new VarContext(vars));
 		assertNotNull(eval("foo"));
 		assertEquals("foo", eval("foo"));
 		assertNotNull(eval("bar"));
@@ -28,7 +29,7 @@ public class VarScopeTest extends BaseExpressionTest {
 
 	@Test
 	public void testCreateOnSet() throws Exception {
-		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET));
+		ctx.pushExecContext(new VarContext(VarContext.Type.CREATE_ON_SET));
 
 		assertNull(eval("foo"));
 		assertEquals("foo", eval("foo = 'foo'"));
@@ -41,7 +42,7 @@ public class VarScopeTest extends BaseExpressionTest {
 
 	@Test
 	public void testNestedCreates() throws Exception {
-		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
+		ctx.pushExecContext(new VarContext(VarContext.Type.CREATE_ON_SET_OR_GET));
 
 		assertNull(eval("foo"));
 		assertNull(eval("foo.bar"));
@@ -56,7 +57,7 @@ public class VarScopeTest extends BaseExpressionTest {
 
 	@Test
 	public void testDeeplyNestedCreates() throws Exception {
-		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
+		ctx.pushExecContext(new VarContext(VarContext.Type.CREATE_ON_SET_OR_GET));
 
 		assertNull(eval("foo"));
 		assertNull(eval("foo.bar"));
@@ -72,7 +73,7 @@ public class VarScopeTest extends BaseExpressionTest {
 
 	@Test
 	public void testCreatesOnNonNulls() throws Exception {
-		ctx.pushExecContext(new VarScope(VarScope.Type.CREATE_ON_SET_OR_GET));
+		ctx.pushExecContext(new VarContext(VarContext.Type.CREATE_ON_SET_OR_GET));
 		assertNull(eval("foo"));
 		assertEquals("foo", eval("foo = 'foo'"));
 		assertEquals("foo", eval("foo"));

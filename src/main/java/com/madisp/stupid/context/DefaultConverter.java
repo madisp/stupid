@@ -1,8 +1,4 @@
-package com.madisp.stupid;
-
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
+package com.madisp.stupid.context;
 
 public class DefaultConverter implements Converter {
 	@Override

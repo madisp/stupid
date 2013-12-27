@@ -1,13 +1,15 @@
-package com.madisp.stupid;
+package com.madisp.stupid.context;
+
+import com.madisp.stupid.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ReflectionScope extends BaseExecContext {
+public class ReflectionContext extends BaseContext {
 	final Object base;
 
-	public ReflectionScope(Object base) {
+	public ReflectionContext(Object base) {
 		this.base = base;
 	}
 

@@ -1,4 +1,4 @@
-package com.madisp.stupid;
+package com.madisp.stupid.context;
 
 public interface Converter {
 	boolean toBool(Object value);

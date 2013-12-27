@@ -1,4 +1,4 @@
-package com.madisp.stupid;
+package com.madisp.stupid.util;
 /*
  * [The "BSD license"]
  *  Copyright (c) 2012 Terence Parr
@@ -31,15 +31,15 @@ package com.madisp.stupid;
 
 // Note, this class is from the antlr4 source code. -madis
 
-/* package */ class CharSupport {
+public class CharSupport {
 	/** When converting ANTLR char and string literals, here is the
 	 *  value set of escape chars.
 	 */
-	public static int ANTLRLiteralEscapedCharValue[] = new int[255];
+	/* package */ static int ANTLRLiteralEscapedCharValue[] = new int[255];
 
 	/** Given a char, we need to be able to show as an ANTLR literal.
 	 */
-	public static String ANTLRLiteralCharValueEscape[] = new String[255];
+	/* package */ static String ANTLRLiteralCharValueEscape[] = new String[255];
 
 	static {
 		ANTLRLiteralEscapedCharValue['n'] = '\n';

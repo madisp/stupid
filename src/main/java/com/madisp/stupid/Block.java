@@ -1,5 +1,8 @@
 package com.madisp.stupid;
 
+import com.madisp.stupid.context.ExecContext;
+import com.madisp.stupid.context.StackContext;
+import com.madisp.stupid.context.VarContext;
 import com.madisp.stupid.expr.StatementListExpression;
 
 import java.util.Arrays;
@@ -25,7 +28,9 @@ public class Block {
 			argMap.put(varNames[i], args[i]);
 		}
 		// wrap our block arguments over the underlying context
-		ExecContext scoped = new WrappingExecContext(new VarScope(Collections.unmodifiableMap(argMap)), ctx);
-		return body.value(scoped);
+		StackContext withArgs = new StackContext();
+		withArgs.pushExecContext(ctx); // the underlying context
+		withArgs.pushExecContext(new VarContext(Collections.unmodifiableMap(argMap))); // args
+		return body.value(withArgs);
 	};
 }

@@ -1,4 +1,4 @@
-package com.madisp.stupid;
+package com.madisp.stupid.context;
 
 /**
  * A ExecContext facilitates access to the external environment.
