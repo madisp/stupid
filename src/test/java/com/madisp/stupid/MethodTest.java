@@ -24,6 +24,14 @@ public class MethodTest extends BaseExpressionTest {
 		return String.format(formatString, args);
 	}
 
+	public String identity(String arg) {
+		return arg;
+	}
+
+	public double sqrt(double arg) {
+		return Math.sqrt(arg);
+	}
+
 	@Test
 	public void testSimpleMethods() throws Exception {
 		assertEquals(bar().getClass(), eval("bar()").getClass());
@@ -61,6 +69,19 @@ public class MethodTest extends BaseExpressionTest {
 		assertNotNull(eval("foo()"));
 		assertNull(eval("baz()"));
 		assertNull(eval("baz().foo()"));
+	}
+
+	@Test
+	public void testPassingNull() throws Exception {
+		assertNull(eval("identity(null)"));
+		assertEquals(identity(null), eval("identity(null)"));
+	}
+
+	@Test
+	public void testPromotingArgs() throws Exception {
+		assertNotNull(eval("sqrt(3)"));
+		assertEquals(Double.class, eval("sqrt(3)").getClass());
+		assertEquals(sqrt(3), eval("sqrt(3)"));
 	}
 
 	public static class Foobar {

@@ -8,61 +8,88 @@ import java.lang.reflect.Modifier;
  * A set of methods that are mainly consumed by the {@link com.madisp.stupid.context.ReflectionContext}.
  */
 public class ReflectionUtil {
+	/**
+	 * Finds the first method that matches the given signature in a class
+	 * @param clz class to search
+	 * @param isStatic if the method is static
+	 * @param method name of the method
+	 * @param args arguments
+	 * @return method or null if not found
+	 */
 	public static Method getMethodBySignature(Class clz, boolean isStatic, String method, Object... args) {
-		Class[] paramClasses = new Class[args.length];
-		for (int i = 0; i < paramClasses.length; i++) {
-			paramClasses[i] = args[i] == null ? null : args[i].getClass();
+		Class[] argTypes = new Class[args.length];
+		for (int i = 0; i < argTypes.length; i++) {
+			argTypes[i] = args[i] == null ? null : args[i].getClass();
 		}
 		for (Method m : clz.getMethods()) {
 			if (Modifier.isStatic(m.getModifiers()) != isStatic) {
 				continue;
 			}
-			if (m.getName().equals(method) && isCallable(m, paramClasses)) {
+			if (m.getName().equals(method) && isCallable(m, argTypes)) {
 				return m;
 			}
 		}
 		return null;
 	}
 
-	public static boolean isCallable(Method m, Class[] paramClasses) {
+	/**
+	 * Check if method is callable with a set of types
+	 * @param m method to check
+	 * @param argTypes argument types, ordered
+	 * @return true if the method is callable with given types
+	 */
+	public static boolean isCallable(Method m, Class[] argTypes) {
 		Class<?>[] paramTypes = m.getParameterTypes();
-		return (isCollapsible(paramTypes, paramClasses) || areAssignableFrom(paramTypes, paramClasses));
+		return (isCollapsible(paramTypes, argTypes) || areAssignableFrom(paramTypes, argTypes));
 	}
 
-	public static boolean isCollapsible(Class[] a, Class[] b) {
-		if (a.length > b.length+1 || b.length == 0) {
+	/**
+	 * Check if srcTypes can be collapsed into dstTypes (e.g., if the last type in dstTypes
+	 * is an array, can we assume that this is a varargs call?)
+	 * @param dstTypes
+	 * @param srcTypes
+	 * @return
+	 */
+	public static boolean isCollapsible(Class[] dstTypes, Class[] srcTypes) {
+		if (dstTypes.length > srcTypes.length+1 || srcTypes.length == 0) {
 			return false;
 		}
-		for (int i = 0; i < a.length - 1; i++) {
-			if (!isAssignableFrom(a[i], b[i])) {
+		for (int i = 0; i < dstTypes.length - 1; i++) {
+			if (!isAssignableFrom(dstTypes[i], srcTypes[i])) {
 				return false;
 			}
 		}
 		// is the last type an array type? (e.g., varargs?)
-		Class last = a[a.length - 1];
+		Class last = dstTypes[dstTypes.length - 1];
 		if (!last.isArray()) {
 			return false;
 		}
-		for (int i = a.length; i < b.length; i++) {
-			if (!isAssignableFrom(last.getComponentType(), b[i])) {
+		for (int i = dstTypes.length; i < srcTypes.length; i++) {
+			if (!isAssignableFrom(last.getComponentType(), srcTypes[i])) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public static Object[] collapse(Class[] dest, Object[] src) {
-		if (dest.length == src.length) {
-			if (dest.length == 0 || !dest[dest.length-1].isArray()) {
+	/**
+	 * Collapse src array so it's class signature matches dest.
+	 * @param dst
+	 * @param src
+	 * @return
+	 */
+	public static Object[] collapse(Class[] dst, Object[] src) {
+		if (dst.length == src.length) {
+			if (dst.length == 0 || !dst[dst.length-1].isArray()) {
 				return src;
-			} else if (isAssignableFrom(dest[dest.length-1], src[src.length-1].getClass())) {
+			} else if (isAssignableFrom(dst[dst.length-1], src[src.length-1].getClass())) {
 				return src;
 			}
 		}
-		Object[] ret = new Object[dest.length];
-		Object[] lastArg = (Object[]) Array.newInstance(dest[dest.length - 1].getComponentType(), src.length - (dest.length - 1));
+		Object[] ret = new Object[dst.length];
+		Object[] lastArg = (Object[]) Array.newInstance(dst[dst.length - 1].getComponentType(), src.length - (dst.length - 1));
 		for (int i = 0; i < lastArg.length; i++) {
-			lastArg[i] = src[dest.length - 1 + i];
+			lastArg[i] = src[dst.length - 1 + i];
 		}
 		for (int i = 0; i < ret.length - 1; i++) {
 			ret[i] = src[i];
@@ -71,12 +98,19 @@ public class ReflectionUtil {
 		return ret;
 	}
 
-	public static boolean areAssignableFrom(Class[] a, Class[] b) {
-		if (a == null || b == null || a.length != b.length) {
+	/**
+	 * Can we assign to an list with signature dstTypes from a list with signature srcTypes?
+	 * e.g. is dstTypes[i] assignable with something from srcTypes[i] ?
+	 * @param dstTypes
+	 * @param srcTypes
+	 * @return
+	 */
+	public static boolean areAssignableFrom(Class[] dstTypes, Class[] srcTypes) {
+		if (dstTypes == null || srcTypes == null || dstTypes.length != srcTypes.length) {
 			return false;
 		}
-		for (int i = 0; i < a.length; i++) {
-			if (!isAssignableFrom(a[i], b[i])) {
+		for (int i = 0; i < dstTypes.length; i++) {
+			if (!isAssignableFrom(dstTypes[i], srcTypes[i])) {
 				return false;
 			}
 		}
@@ -84,68 +118,50 @@ public class ReflectionUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean isAssignableFrom(Class a, Class b) {
+	public static boolean isAssignableFrom(Class dstType, Class srcType) {
 		// same class
-		if (a.equals(b)) {
+		if (dstType.equals(srcType)) {
 			return true;
 		}
-		// byte
-		if (a.equals(byte.class) && b.equals(Byte.class)) {
-			return true;
+		// autoboxing
+		if (dstType.isPrimitive()) {
+			if (srcType == null) {
+				return false; // null can't be assigned to primitive
+			}
+
+			final Class[] primitiveNums = { byte.class, short.class, int.class, long.class, float.class, double.class };
+			final Class[] boxedNums = { Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class };
+
+			final int primitiveIdx = indexOf(primitiveNums, dstType);
+			final int boxedIdx = indexOf(boxedNums, srcType);
+
+			if (boxedIdx >= 0 && boxedIdx <= primitiveIdx) {
+				return true;
+			}
+
+			// boolean
+			if (dstType.equals(boolean.class) && srcType.equals(Boolean.class)) {
+				return true;
+			}
+			// char
+			if (dstType.equals(char.class) && srcType.equals(Character.class)) {
+				return true;
+			}
 		}
-		if (b.equals(byte.class) && a.equals(Byte.class)) {
-			return true;
-		}
-		// short
-		if (a.equals(short.class) && b.equals(Short.class)) {
-			return true;
-		}
-		if (b.equals(short.class) && a.equals(Short.class)) {
-			return true;
-		}
-		// int
-		if (a.equals(int.class) && b.equals(Integer.class)) {
-			return true;
-		}
-		if (b.equals(int.class) && a.equals(Integer.class)) {
-			return true;
-		}
-		// long
-		if (a.equals(long.class) && b.equals(Long.class)) {
-			return true;
-		}
-		if (b.equals(long.class) && a.equals(Long.class)) {
-			return true;
-		}
-		// float
-		if (a.equals(float.class) && b.equals(Float.class)) {
-			return true;
-		}
-		if (b.equals(float.class) && a.equals(Float.class)) {
-			return true;
-		}
-		// double
-		if (a.equals(double.class) && b.equals(Double.class)) {
-			return true;
-		}
-		if (b.equals(double.class) && a.equals(Double.class)) {
-			return true;
-		}
-		// boolean
-		if (a.equals(boolean.class) && b.equals(Boolean.class)) {
-			return true;
-		}
-		if (b.equals(boolean.class) && a.equals(Boolean.class)) {
-			return true;
-		}
-		// char
-		if (a.equals(char.class) && b.equals(Character.class)) {
-			return true;
-		}
-		if (b.equals(char.class) && a.equals(Character.class)) {
+		if (srcType == null) {
+			// null can be assigned to anything
 			return true;
 		}
 		// other, inheritance, etc
-		return a.isAssignableFrom(b);
+		return dstType.isAssignableFrom(srcType);
+	}
+
+	private static int indexOf(Object[] haystack, Object needle) {
+		for (int i = 0; i < haystack.length; i++) {
+			if (needle == null && haystack[i] == null || needle != null && needle.equals(haystack[i])) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
