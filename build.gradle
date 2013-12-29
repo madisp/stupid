@@ -14,7 +14,7 @@ repositories {
 // gradle stuff
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.9'
+    gradleVersion = '1.10'
 }
 
 // plugins
@@ -142,6 +142,14 @@ publishing {
                 classifier 'javadoc'
             }
             pom.withXml {
+                // modify the antlr4 runtime dep to be compile :( this tears me up :(
+                def fixdeps = ['org.antlr:antlr4-runtime']
+                asNode().dependencies.dependency.each { dep ->
+                    if (fixdeps.find({it == "${dep.groupId.text()}:${dep.artifactId.text()}"})) {
+                        dep.remove dep.scope
+                    }
+                }
+                // add all the extra information
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
                     name 'stupid'
