@@ -51,7 +51,7 @@ public class ReflectionUtil {
 	 * @return
 	 */
 	public static boolean isCollapsible(Class[] dstTypes, Class[] srcTypes) {
-		if (dstTypes.length > srcTypes.length+1 || srcTypes.length == 0) {
+		if (dstTypes.length > srcTypes.length+1 || srcTypes.length == 0 || dstTypes.length == 0) {
 			return false;
 		}
 		for (int i = 0; i < dstTypes.length - 1; i++) {
