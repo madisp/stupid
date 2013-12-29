@@ -129,7 +129,16 @@ task javadocJar(type: Jar, dependsOn: javadocs) {
 publishing {
     repositories {
         maven {
+            name 'dry'
             url "$buildDir/repo"
+        }
+        maven {
+            name 'snapshots'
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+            credentials {
+                username = System.getenv("SONATYPE_OSS_USER")
+                password = System.getenv("SONATYPE_OSS_PASS")
+            }
         }
     }
     publications {
