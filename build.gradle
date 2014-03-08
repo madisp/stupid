@@ -161,6 +161,7 @@ publishing {
                 // add all the extra information
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
+                    packaging 'jar'
                     name 'stupid'
                     description 'A stupid scripting language for Java/JVM'
                     url 'http://github.com/madisp/stupid'
