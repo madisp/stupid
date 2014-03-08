@@ -29,7 +29,10 @@ apply plugin: 'bintray'
 // general project info
 
 group = 'com.madisp.stupid'
-version = '0.1.0-SNAPSHOT'
+version = '0.1.1'
+if (!project.hasProperty('release')) {
+    version = version + '-SNAPSHOT'
+}
 project.sourceCompatibility = '1.6'
 tasks.withType(Compile) { options.encoding = 'UTF-8' }
 
