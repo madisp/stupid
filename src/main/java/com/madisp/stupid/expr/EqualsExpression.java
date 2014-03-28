@@ -9,7 +9,7 @@ import com.madisp.stupid.Expression;
  * comparing strings with the == operator is valid, for instance.
  * In stupid: {@code expr == expr}
  */
-public class EqualsExpression implements Expression {
+public class EqualsExpression implements Expression<Boolean> {
 	private Expression left, right;
 
 	public EqualsExpression(Expression left, Expression right) {
@@ -23,7 +23,7 @@ public class EqualsExpression implements Expression {
 	}
 
 	@Override
-	public Object value(ExecContext ctx) {
+	public Boolean value(ExecContext ctx) {
 		Object leftValue = ctx.dereference(left);
 		Object rightValue = ctx.dereference(right);
 		return leftValue == null ? rightValue == null : leftValue.equals(rightValue);

@@ -5,11 +5,11 @@ package com.madisp.stupid;
  * a value can be dereferenced given an {@link ExecContext}. All of the expressions
  * in stupid are Values.
  */
-public interface Value {
+public interface Value<T> {
 	/**
 	 * Dereference a value to a POJO instance
 	 * @param ctx the execution context
 	 * @return POJO representation of this value (expression)
 	 */
-	Object value(ExecContext ctx);
+	T value(ExecContext ctx);
 }

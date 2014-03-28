@@ -7,7 +7,7 @@ import com.madisp.stupid.Expression;
  * The boolean and operator.
  * Usage in stupid: {@code expr and expr}
  */
-public class AndExpression implements Expression {
+public class AndExpression implements Expression<Boolean> {
 	private final Expression left, right;
 
 	public AndExpression(Expression left, Expression right) {
@@ -16,7 +16,7 @@ public class AndExpression implements Expression {
 	}
 
 	@Override
-	public Object value(ExecContext ctx) {
+	public Boolean value(ExecContext ctx) {
 		return ctx.getConverter().toBool(left.value(ctx)) && ctx.getConverter().toBool(right.value(ctx));
 	}
 

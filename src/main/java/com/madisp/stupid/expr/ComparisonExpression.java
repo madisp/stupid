@@ -11,7 +11,7 @@ import com.madisp.stupid.Expression;
  *
  * Usage in stupid: {@code expr < expr}
  */
-public class ComparisonExpression implements Expression {
+public class ComparisonExpression implements Expression<Boolean> {
 	private Expression left, right;
 
 	public ComparisonExpression(Expression left, Expression right) {
@@ -20,7 +20,7 @@ public class ComparisonExpression implements Expression {
 	}
 
 	@Override
-	public Object value(ExecContext ctx) {
+	public Boolean value(ExecContext ctx) {
 		Object leftValue = ctx.dereference(left);
 		Object rightValue = ctx.dereference(right);
 		if (leftValue instanceof Double || rightValue instanceof Double) {

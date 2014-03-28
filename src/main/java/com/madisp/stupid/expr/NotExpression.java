@@ -8,7 +8,7 @@ import com.madisp.stupid.Expression;
  *
  * Usage in stupid: {@code !expr}
  */
-public class NotExpression implements Expression {
+public class NotExpression implements Expression<Boolean> {
 	private final Expression expr;
 
 	public NotExpression(Expression expr) {
@@ -16,7 +16,7 @@ public class NotExpression implements Expression {
 	}
 
 	@Override
-	public Object value(ExecContext ctx) {
+	public Boolean value(ExecContext ctx) {
 		return !ctx.getConverter().toBool(ctx.dereference(expr));
 	}
 
