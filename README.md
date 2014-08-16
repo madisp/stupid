@@ -3,8 +3,12 @@ stupid [![Build Status](https://travis-ci.org/madisp/stupid.png?branch=master)](
 
 A simple scripting language with a Java runtime and interoperability. Works with Android.
 
-* [Javadoc](http://madisp.com/stupid)
+* [Javadoc](http://madisp.com/javadoc/stupid/)
 * [Binaries (Snapshots)](https://oss.sonatype.org/content/repositories/snapshots/com/madisp/stupid/stupid/)
+* [Binaries (Maven central)](http://search.maven.org/#artifactdetails%7Ccom.madisp.stupid%7Cstupid%7C0.1.0%7Cjar)
+  * groupId: com.madisp.stupid
+  * artifactId: stupid
+  * version: 0.1.0
 
 Usage
 -----
